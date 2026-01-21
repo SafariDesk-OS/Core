@@ -1,11 +1,11 @@
 services:
   frontend:
-    container_name: safaridesk_front
+    container_name: safaridesk_os_front
     build:
       context: .
       dockerfile: frontend/Dockerfile
     ports:
-      - "8000:80"
+      - "9000:80"
     volumes:
       - safari:/mnt/safaridesk:ro
     depends_on:
@@ -14,7 +14,7 @@ services:
     restart: always
 
   api:
-    container_name: safaridesk_api
+    container_name: safaridesk_os_api
     build:
       context: ./backend
     command: >
@@ -22,7 +22,7 @@ services:
              python manage.py install_pgvector &&
              python manage.py migrate --noinput &&
              python manage.py safari &&
-             daphne -b 0.0.0.0 -p 8100 RNSafarideskBack.asgi:application"
+             daphne -b 0.0.0.0 -p 9100 RNSafarideskBack.asgi:application"
     env_file:
       - .env
     environment:
@@ -31,7 +31,7 @@ services:
       - gunicorn_logs:/var/log/gunicorn
       - safari:/mnt
     ports:
-      - "8100:8100"
+      - "9100:9100"
     depends_on:
       db:
         condition: service_healthy
@@ -40,7 +40,7 @@ services:
     restart: always
 
   worker:
-    container_name: safaridesk_worker
+    container_name: safaridesk_os_worker
     build:
       context: ./backend
     command: >
@@ -60,23 +60,23 @@ services:
     restart: always
 
   redis:
-    container_name: safaridesk_redis
+    container_name: safaridesk_os_redis
     image: redis:7-alpine
     ports:
-      - "6379:6379"
+      - "9379:6379"
     volumes:
       - redisdata:/data
     restart: always
 
   db:
-    container_name: safaridesk_db
+    container_name: safaridesk_os_db
     image: pgvector/pgvector:pg16
     environment:
-      POSTGRES_DB: ${DB_NAME:-safaridesk}
+      POSTGRES_DB: ${DB_NAME:-safaridesk_os}
       POSTGRES_USER: ${DB_USER:-postgres}
       POSTGRES_PASSWORD: ${DB_PASSWORD:-postgres}
     ports:
-      - "5432:5432"
+      - "9432:5432"
     volumes:
       - postgresdata:/var/lib/postgresql/data
     restart: always
