@@ -5,7 +5,7 @@ services:
       context: .
       dockerfile: frontend/Dockerfile
     ports:
-      - "9000:80"
+      - "9004:80"
     volumes:
       - safari:/mnt/safaridesk:ro
     depends_on:
