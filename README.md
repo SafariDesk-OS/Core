@@ -16,7 +16,7 @@ cp .env.example .env
 # See docs for configuration details
 
 # Start all services
-docker compose up -d
+docker compose up -d --build
 ```
 
 **Default admin login:** Check your `.env` values for `SUPERUSER_*` credentials.
